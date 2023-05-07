@@ -3,6 +3,7 @@ package com.masai.DAO;
 import java.util.List;
 
 import com.masai.Entities.Customer;
+import com.masai.Entities.Stock;
 import com.masai.Entities.Transaction;
 import com.masai.Exception.DuplicateEmailException;
 import com.masai.Exception.InsufficientBalanceException;
@@ -16,10 +17,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+
+
 public class CustomerDAO implements CustomerServices {
 
 	@Override
-	public  void signUpCustomer(Customer customer) throws DuplicateEmailException {
+	public void signUpCustomer(Customer customer) throws DuplicateEmailException {
 		EntityManager em = Utils.getEntityManager();
 		EntityTransaction et = em.getTransaction();
 		try {
@@ -33,51 +36,17 @@ public class CustomerDAO implements CustomerServices {
 			}
 			em.persist(customer);
 			et.commit();
-		 System.out.println("Singup successfully");
+			System.out.println("account successfully created");
 		} catch (Exception e) {
-			System.out.println(e.getMessage() + " " + " unable to SingUP");
+			System.out.println("unable to SingUP");
 		} finally {
 			em.close();
-		}
-
-	}
-
-	@Override
-	public Customer getCustomerById(int custID) throws SomethingWentWrong {
-		EntityManager em = Utils.getEntityManager();
-
-		Customer customer = null;
-
-		try {
-			customer = em.find(Customer.class, custID);
-			if (customer == null) {
-				throw new SomethingWentWrong("Customer not found");
 			}
-
-		} catch (Exception e) {
-			throw new SomethingWentWrong("Unable to find");
-
-		}
-		return customer;
-
 	}
 
-	@Override
-    public Customer getCustomerByUsername(String username) throws SomethingWentWrong {
-        EntityManager em = Utils.getEntityManager();
-        try {
-            Query query = em.createQuery("SELECT c FROM Customer c WHERE c.userName = :username");
-            query.setParameter("username", username);
-            List<Customer> customers = query.getResultList();
-            if (customers.size() == 0) {
-                throw new SomethingWentWrong("Customer not found");
-            }
-            return customers.get(0);
-        } finally {
-            em.close();
-        }
-    }
 	
+
+
 
 	@Override
 	public void addMoneyToWallet(int customerId, double amount) {
@@ -126,10 +95,21 @@ public class CustomerDAO implements CustomerServices {
 		}
 
 	}
-
+	@Override
+	public void viewAllStocks() {
+		StockDAO st = new StockDAO();
+		  List<Stock> stocks = st.getAllStocks();
+		  System.out.println("Available stocks:");
+		  for (Stock stock : stocks) {
+		    System.out.println(stock.getName());
+		    System.out.println("Price: " + stock.getPrice() + " Quantity: " + stock.getQuantity());
+		  }
+		
+	}
 	@Override
 	public void buyStock(int customerId, String stockName, int quantity)
 			throws StockNotFoundException, InsufficientStockException, InsufficientBalanceException {
+		
 
 	}
 
@@ -144,10 +124,31 @@ public class CustomerDAO implements CustomerServices {
 
 		return null;
 	}
-
+    
 	@Override
 	public void deleteCustomer(int customerId) {
+		
+		    EntityManager em = Utils.getEntityManager();
+		    EntityTransaction et = em.getTransaction();
+		    try {
+		        et.begin();
+		        Customer customer = em.find(Customer.class, customerId);
+		        if (customer != null) {
+		            em.remove(customer);
+		            et.commit();
+		            System.out.println("Successfully deleted");
+		        } else {
+		            System.out.println("Customer not found with ID: " + customerId);
+		        }
+		    } catch (Exception e) {
+		        System.out.println("Unable to delete account.");
+		    } finally {
+		        em.close();
+		    }
+		}
 
+		
 	}
 
-}
+	
+

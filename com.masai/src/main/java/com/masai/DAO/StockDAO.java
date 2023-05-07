@@ -36,7 +36,7 @@ public class StockDAO implements StockService {
 	}
 
 	@Override
-	public List<Stock> getAllStocks() {
+	public  List<Stock> getAllStocks() {
 		EntityManager em = Utils.getEntityManager();
 		Query query = em.createQuery("select s from Stock s");
 		return query.getResultList();

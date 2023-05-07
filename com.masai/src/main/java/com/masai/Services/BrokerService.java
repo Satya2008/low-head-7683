@@ -17,10 +17,12 @@ public interface BrokerService {
 	   
 	   public Stock getStock(String stockName); 
 	   
-	   public void deleteCustomer(Customer customer);
+	   public void deleteCustomer(int customerID);
 	   
 	   public void deleteStock(Stock stock);
 	   
 	   public void logout();
+	   
+	   Customer getCustomer(int customerID); 
 	}
 

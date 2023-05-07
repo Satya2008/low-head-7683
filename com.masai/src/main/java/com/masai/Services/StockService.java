@@ -9,7 +9,7 @@ public interface StockService {
 	    
 	    public void deleteStock(int stockId);
 	    
-	    public List<Stock> getAllStocks();
+	    public  List<Stock> getAllStocks();
 	    
 	    public Stock getStockById(int stockId);
 	    

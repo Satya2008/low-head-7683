@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.masai.Entities.Customer;
 import com.masai.Entities.Transaction;
+import com.masai.Exception.CustomerNotFoundException;
 import com.masai.Exception.DuplicateEmailException;
 import com.masai.Exception.InsufficientBalanceException;
 import com.masai.Exception.InsufficientStockException;
@@ -19,9 +20,11 @@ public interface CustomerServices {
 
     public void signUpCustomer(Customer customer) throws DuplicateEmailException;
 
-    public Customer getCustomerById(int custID) throws SomethingWentWrong ;
+//    public Customer getCustomerById(int custID) throws SomethingWentWrong ;
 
-    public Customer getCustomerByUsername(String username) throws SomethingWentWrong, Exception;
+//    public Customer getCustomerByUsername(String username) throws SomethingWentWrong, Exception;
+     
+    public void viewAllStocks();
 
     public void addMoneyToWallet(int customerId, double amount) throws SomethingWentWrong;
 
@@ -33,6 +36,8 @@ public interface CustomerServices {
 
     public List<Transaction> getTransactionHistory(int customerId);
 
-    public void deleteCustomer(int customerId);
+	public void deleteCustomer(int customerId);
+    
+   
 
 }
