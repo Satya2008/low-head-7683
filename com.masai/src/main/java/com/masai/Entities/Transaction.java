@@ -23,7 +23,7 @@ public class Transaction {
 	
 	private double price;
 	
-	private Date transactionDate;
+	private String transactionDate;
 	@ManyToOne
 	@JoinColumn(name = "customerId")
 	private Customer customer;
@@ -37,7 +37,7 @@ public class Transaction {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Transaction( String transactionType, int quantity, double price, Date transactionDate,
+	public Transaction( String transactionType, int quantity, double price, String transactionDate,
 			Customer customer, Stock stock) {
 		super();
 		
@@ -88,11 +88,11 @@ public class Transaction {
 		this.price = price;
 	}
 
-	public Date getTransactionDate() {
+	public String getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(Date transactionDate) {
+	public void setTransactionDate(String transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 
