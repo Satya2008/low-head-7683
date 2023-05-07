@@ -1,6 +1,7 @@
 package com.masai.Entities;
 
 import java.util.List;
+import java.util.Scanner;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -156,6 +157,8 @@ public List<Stock> getStocks() {
 public void setStocks(List<Stock> stocks) {
 	this.stocks = stocks;
 }
+
+
 
 
 
