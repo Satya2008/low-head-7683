@@ -1,41 +1,69 @@
 package com.masai.UI;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-import com.masai.DAO.CustomerDAO;
-import com.masai.DAO.Utils;
-import com.masai.Entities.Customer;
-import com.masai.Entities.Stock;
-import com.masai.Entities.Transaction;
+public class App {
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-public class App 
-{
+        int choice = 0;
+        boolean isLoggedInAsBroker = false;
 
-	public static void displayBrokerMenu() {
-		System.out.println("1. View All Customers");
-		System.out.println("2. Add new Stock");
-		System.out.println("3. View All Stock");
-		System.out.println("4. View consolidated report of a stock");
-		System.out.println("5   Delete Customer");
-		System.out.println("6.  Delete Stock");
-		System.out.println("8. log Out");
-	}
-	 
+        do {
+            if (isLoggedInAsBroker) {
+                BrokerUI br = new BrokerUI();
+                br.displayBrokerMenu();
+                break;
+            }
 
-	
-    public static void main( String[] args ) throws Exception
-    {
-    	Scanner sc = new Scanner(System.in);
-    	customerUI customer = new customerUI();
-    	customer.customerSignUp(sc);
+            System.out.println("1. Broker");
+            System.out.println("2. Customer");         
+            System.out.println("0. Exit");
+            System.out.print("Enter Selection: ");
+            choice = sc.nextInt();
+            
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Broker User Name: ");
+                    String user = sc.next();
+                    System.out.print("Enter Broker Password: ");
+                    String password = sc.next();
+                    if (user.equals("admin") && password.equals("admin")) {
+                        System.out.println("Successfully logIn as Broker");
+                        isLoggedInAsBroker = true;
+                    } else {
+                        System.out.println("Wrong Credentials, try again");
+                    }
+                    break;
+                case 2:
+                    customerUI cust = new customerUI();
+                    int ch = 0;
+                    do {
+                        System.out.println("1. LogIn");
+                        System.out.println("2. SingUp");         
+                        System.out.println("0. Exit");
+                        System.out.print("Enter Selection: ");
+                        ch = sc.nextInt();
+                        switch(ch) {
+                            case 1: 
+                                cust.customerLogIn(sc);
+                                break;
+                            case 2:
+                                cust.customerSignUp(sc);
+                                cust.customerLogIn(sc);
+                                break;
+                        }
+                    } while (ch != 0);
+                    break;
+                case 0:
+                    System.out.println("Thanks for using the services");
+                    break;
+                default:
+                    System.out.println("Invalid Selection, try again");
+            }
+        } while (choice != 0);
 
-     
+        sc.close();
     }
-
-
 }

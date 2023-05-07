@@ -6,7 +6,10 @@ import java.util.Scanner;
 import com.masai.DAO.CustomerDAO;
 import com.masai.DAO.Utils;
 import com.masai.Entities.Customer;
+import com.masai.Exception.CustomerNotFoundException;
 import com.masai.Exception.DuplicateEmailException;
+import com.masai.Exception.InsufficientBalanceException;
+import com.masai.Exception.SomethingWentWrong;
 import com.masai.Services.CustomerServices;
 
 import jakarta.persistence.EntityManager;
@@ -14,15 +17,63 @@ import jakarta.persistence.Query;
 
 public class customerUI {
 
-	public static void displayCustomerMenu() {
+	public static void displayCustomerMenu() throws InsufficientBalanceException {
+		CustomerDAO customer = new CustomerDAO();
+		Scanner sc = new Scanner(System.in);
+		int choice = 0;
+		do {
 		System.out.println("1. View All Stock");
-		System.out.println("2. Buy Stock");
-		System.out.println("3. Sell Stock");
-		System.out.println("4. Transaction History");
-		System.out.println("5   Add Money in Wallet");
+		System.out.println("2.- Buy Stock");
+		System.out.println("3.- Sell Stock");
+		System.out.println("4.- Transaction History");
+		System.out.println("5  Add Money in Wallet");
 		System.out.println("6. Withdraw money from Wallet");
 		System.out.println("7. Delete Account");
-		System.out.println("8. log Out");
+		System.out.println("8.- log Out");
+		System.out.println("0. Exit");
+		System.out.println("Enter your preference");
+		choice = sc.nextInt();
+		switch(choice) {
+		case 1: 
+			 customer.viewAllStocks();
+			break;
+		case 2: 
+			break;
+		case 3: 
+			break;
+		case 4: 
+			break;
+		case 5: 
+			System.out.println("Enter customer ID");
+			int id = sc.nextInt();
+			System.out.println("Enter amount");
+			double amount = sc.nextDouble();
+			customer.addMoneyToWallet(id, amount);
+			System.out.println("amount added successfully");
+			break;
+		case 6: 
+			System.out.println("Enter customer ID");
+			int idForwith = sc.nextInt();
+			System.out.println("Enter amount");
+			double amountforWith = sc.nextDouble();
+			customer.withdrawMoneyFromWallet(idForwith, amountforWith);
+			System.out.println("amount withdrwa successfully");
+		
+			break;
+		case 7: 
+			System.out.println("Enter customer ID");
+			int idFordel = sc.nextInt();
+		    customer.deleteCustomer(idFordel);
+		    break;
+		case 8: 
+			break;
+		 case 0:
+	          System.out.println("Thanks for using the services");
+	          break;
+	        default:
+	          System.out.println("Invalid Selection, try again");
+		}
+		} while(choice!=0);
 	}
 
 	public static void customerLogIn(Scanner sc) {
@@ -45,7 +96,12 @@ public class customerUI {
 	        } else {
 	        	System.out.println("Log in Successfully");
 	            Customer customer = customers.get(0);
-	            displayCustomerMenu();
+	            try {
+					displayCustomerMenu();
+				} catch (InsufficientBalanceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	        }
 	    } finally {
 	        em.close();
