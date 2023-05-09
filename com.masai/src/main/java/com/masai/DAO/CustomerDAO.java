@@ -1,10 +1,13 @@
 package com.masai.DAO;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import com.masai.Entities.Customer;
 import com.masai.Entities.Stock;
 import com.masai.Entities.Transaction;
+import com.masai.Entities.TransactionType;
 import com.masai.Exception.DuplicateEmailException;
 import com.masai.Exception.InsufficientBalanceException;
 import com.masai.Exception.InsufficientStockException;
@@ -101,28 +104,74 @@ public class CustomerDAO implements CustomerServices {
 		  List<Stock> stocks = st.getAllStocks();
 		  System.out.println("Available stocks:");
 		  for (Stock stock : stocks) {
-		    System.out.println(stock.getName());
-		    System.out.println("Price: " + stock.getPrice() + " Quantity: " + stock.getQuantity());
+		    System.out.println("Stock name: "+stock.getName()+ "Price: " + stock.getPrice() + " Quantity: " + stock.getQuantity());
 		  }
 		
 	}
 	@Override
-	public void buyStock(int customerId, String stockName, int quantity)
-			throws StockNotFoundException, InsufficientStockException, InsufficientBalanceException {
-		
-
+	public void buyStock(int customerId, int stockID, int quantity)
+	    throws StockNotFoundException, InsufficientStockException, InsufficientBalanceException {
+		EntityManager em = Utils.getEntityManager();
+	    EntityTransaction et = em.getTransaction();
+	    try {
+	      
+	        et.begin();
+	        
+	        Customer customer = em.find(Customer.class, customerId);
+	        Stock stock = em.find(Stock.class, stockID);
+	        
+	        if(customer.getWalletBalance() < stock.getPrice() * quantity) {
+	            throw new InsufficientBalanceException("Insufficient balance in customer's account");
+	        }
+	        
+	        double totalAmount = stock.getPrice() * quantity;
+	        customer.setWalletBalance(customer.getWalletBalance() - totalAmount);
+	        
+	        Transaction tr = new Transaction();
+	        tr.setCustomer(customer);
+	        tr.setStock(stock);
+	        tr.setQuantity(quantity);
+	        tr.setTransactionType(TransactionType.BUY);
+	        tr.setTransactionDate(LocalDate.now());
+	        em.persist(tr);
+	        stock.setQuantity(stock.getQuantity()-tr.getQuantity());
+	        em.persist(stock);
+	        et.commit();
+	        
+	        System.out.println("Successfully buy : " + stock.getName() + " stock");
+	    } catch (InsufficientBalanceException e) {
+	       
+	        throw e;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
 	}
+
+		
 
 	@Override
 	public void sellStock(int customerId, String stockName, int quantity)
 			throws StockNotFoundException, InsufficientStockException {
-
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public List<Transaction> getTransactionHistory(int customerId) {
-
-		return null;
+	    EntityManager em = Utils.getEntityManager();
+	    try {
+	        Query query = em.createQuery(
+	            "SELECT t FROM Transaction t WHERE t.customer.id = :customerId ORDER BY t.transactionDate DESC");
+	            query.setParameter("customerId", customerId);
+	           List<Transaction> tr =  query.getResultList();
+	        return tr;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
 	}
     
 	@Override
@@ -147,8 +196,38 @@ public class CustomerDAO implements CustomerServices {
 		    }
 		}
 
-		
-	}
+		public void WalletBalance(int customerId) {
+
+		    EntityManager em = Utils.getEntityManager();
+		    EntityTransaction et = em.getTransaction();
+		    try {
+		        et.begin();
+		        Customer customer = em.find(Customer.class, customerId);
+		       System.out.println(customer.getWalletBalance()); 
+		    } catch (Exception e) {
+		        System.out.println("Unable to delete account.");
+		    } finally {
+		        em.close();
+		    }
+		}
+
+
+
+
+
+		@Override
+		public void sellStock(int stockId, int quantity) throws StockNotFoundException, InsufficientStockException {
+			// TODO Auto-generated method stub
+			
+		}
+			
+		}
+
+
+
+
+
+	
 
 	
 

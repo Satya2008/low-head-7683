@@ -1,6 +1,7 @@
 package com.masai.Entities;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,13 +18,13 @@ public class Transaction {
 	private int tranID;
 	
 
-	private String transactionType;
+	private TransactionType transactionType;
 	
 	private int quantity;
 	
 	private double price;
 	
-//	private String transactionDate;
+	private LocalDate transactionDate;
 	@ManyToOne
 	@JoinColumn(name = "customerId")
 	private Customer customer;
@@ -37,7 +38,7 @@ public class Transaction {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Transaction( String transactionType, int quantity, double price, 
+	public Transaction( TransactionType transactionType, int quantity, double price, 
 			Customer customer, Stock stock) {
 		super();
 		
@@ -64,11 +65,11 @@ public class Transaction {
 		this.tranID = tranID;
 	}
 
-	public String getTransactionType() {
+	public TransactionType getTransactionType() {
 		return transactionType;
 	}
 
-	public void setTransactionType(String transactionType) {
+	public void setTransactionType(TransactionType transactionType) {
 		this.transactionType = transactionType;
 	}
 
@@ -88,13 +89,13 @@ public class Transaction {
 		this.price = price;
 	}
 
-//	public String getTransactionDate() {
-//		return transactionDate;
-//	}
-//
-//	public void setTransactionDate(String transactionDate) {
-//		this.transactionDate = transactionDate;
-//	}
+	public LocalDate getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(LocalDate transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 
 	public Customer getCustomer() {
 		return customer;
@@ -112,6 +113,12 @@ public class Transaction {
 		this.stock = stock;
 	}
 	
+	
+	public void printStockDetails() {
+	    if (this.transactionType == TransactionType.BUY) {
+	        System.out.println("Stock Name = " + this.stock.getName() + " - "+"Stock Price = "+ + this.stock.getPrice() + " - " + "Quantity  = "+ this.stock.getQuantity());
+	    }
+	}
 	
 	
 }

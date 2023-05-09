@@ -6,10 +6,15 @@ import java.util.Scanner;
 import com.masai.DAO.CustomerDAO;
 import com.masai.DAO.Utils;
 import com.masai.Entities.Customer;
+import com.masai.Entities.Stock;
+import com.masai.Entities.Transaction;
+import com.masai.Entities.TransactionType;
 import com.masai.Exception.CustomerNotFoundException;
 import com.masai.Exception.DuplicateEmailException;
 import com.masai.Exception.InsufficientBalanceException;
+import com.masai.Exception.InsufficientStockException;
 import com.masai.Exception.SomethingWentWrong;
+import com.masai.Exception.StockNotFoundException;
 import com.masai.Services.CustomerServices;
 
 import jakarta.persistence.EntityManager;
@@ -19,13 +24,15 @@ public class customerUI {
 
 	public static void displayCustomerMenu() throws InsufficientBalanceException {
 		CustomerDAO customer = new CustomerDAO();
+		Stock st = new Stock();
 		Scanner sc = new Scanner(System.in);
 		int choice = 0;
 		do {
 		System.out.println("1. View All Stock");
-		System.out.println("2.- Buy Stock");
-		System.out.println("3.- Sell Stock");
-		System.out.println("4.- Transaction History");
+		System.out.println("2. Buy Stock");
+//		we have to add sell method also
+		System.out.println("3. Wallet Balance");
+		System.out.println("4. Transaction History");
 		System.out.println("5  Add Money in Wallet");
 		System.out.println("6. Withdraw money from Wallet");
 		System.out.println("7. Delete Account");
@@ -35,43 +42,100 @@ public class customerUI {
 		choice = sc.nextInt();
 		switch(choice) {
 		case 1: 
+			System.out.println("***********************************************************************************");
 			 customer.viewAllStocks();
+			 System.out.println("***********************************************************************************");
 			break;
-		case 2: 
+		case 2:
+			System.out.println("Enter customer ID");
+			int idForBuy = sc.nextInt();
+			System.out.println("Enter Stock ID");
+			int StockId =sc.nextInt();
+			System.out.println("Enter Quantity");
+			int QunatityForBuy = sc.nextInt();
+			System.out.println("***********************************************************************************");
+			try {
+				customer.buyStock(idForBuy, StockId, QunatityForBuy);
+			} catch (StockNotFoundException | InsufficientStockException | InsufficientBalanceException e) {
+				
+				e.printStackTrace();
+			}
+			System.out.println("***********************************************************************************");
 			break;
-		case 3: 
+			
+			
+			
+		case 3: System.out.println("Enter customer ID");
+		int idForBalance = sc.nextInt();
+		System.out.println("***********************************************************************************");
+			 customer.WalletBalance(idForBalance);
+			 System.out.println("***********************************************************************************");
 			break;
-		case 4: 
-			break;
+		case 4:
+		
+		    System.out.println("Enter customer id:");
+		    int customerId = sc.nextInt();
+		    System.out.println("***********************************************************************************");
+		    List<Transaction> transactions = customer.getTransactionHistory(customerId);
+		    for (Transaction transaction : transactions) {
+		        if (transaction.getTransactionType() == TransactionType.BUY) {
+		            transaction.printStockDetails();
+		        }
+		    }
+		    
+		    System.out.println("***********************************************************************************");
+		    break;
+			
+			
+			
 		case 5: 
 			System.out.println("Enter customer ID");
 			int id = sc.nextInt();
 			System.out.println("Enter amount");
 			double amount = sc.nextDouble();
+			System.out.println("***********************************************************************************");
 			customer.addMoneyToWallet(id, amount);
 			System.out.println("amount added successfully");
+			System.out.println("***********************************************************************************");
 			break;
+			
+			
 		case 6: 
 			System.out.println("Enter customer ID");
 			int idForwith = sc.nextInt();
 			System.out.println("Enter amount");
 			double amountforWith = sc.nextDouble();
+			System.out.println("***********************************************************************************");
 			customer.withdrawMoneyFromWallet(idForwith, amountforWith);
 			System.out.println("amount withdrwa successfully");
-		
+			System.out.println("***********************************************************************************");
 			break;
+			
+			
 		case 7: 
 			System.out.println("Enter customer ID");
 			int idFordel = sc.nextInt();
+			System.out.println("***********************************************************************************");
 		    customer.deleteCustomer(idFordel);
+		    System.out.println("***********************************************************************************");;
 		    break;
-		case 8: 
+		    
+		    
+		    
+		case 8:
+			System.out.println("***********************************************************************************");
 			break;
+			
+			
 		 case 0:
+			 System.out.println("***********************************************************************************");
 	          System.out.println("Thanks for using the services");
+	          System.out.println("***********************************************************************************");
 	          break;
 	        default:
+	        	System.out.println("***********************************************************************************");
 	          System.out.println("Invalid Selection, try again");
+	          System.out.println("***********************************************************************************");
 		}
 		} while(choice!=0);
 	}

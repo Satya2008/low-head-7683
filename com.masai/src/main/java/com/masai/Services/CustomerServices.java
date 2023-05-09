@@ -30,13 +30,15 @@ public interface CustomerServices {
 
     public void withdrawMoneyFromWallet(int customerId, double amount) throws InsufficientBalanceException;
 
-    public void buyStock(int customerId, String stockName, int quantity) throws StockNotFoundException, InsufficientStockException, InsufficientBalanceException;
+    public void buyStock(int customerId, int stockID, int quantity) throws StockNotFoundException, InsufficientStockException, InsufficientBalanceException;
 
     public void sellStock(int customerId, String stockName, int quantity) throws StockNotFoundException, InsufficientStockException;
 
     public List<Transaction> getTransactionHistory(int customerId);
 
 	public void deleteCustomer(int customerId);
+
+	void sellStock(int stockId, int quantity) throws StockNotFoundException, InsufficientStockException;
     
    
 
