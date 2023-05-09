@@ -27,10 +27,12 @@ public class BrokerUI {
 		    choice = sc.nextInt();
 		    switch(choice) {
 		    case 1: 
+		    	System.out.println("***********************************************************************************");
 		    	List<Customer> customer = br.getAllCustomers();
 		    	for(Customer c : customer) {
 		    		System.out.println(c);
 		    	}
+		    	System.out.println("***********************************************************************************");
 		    	break;
 		    case 2:
 		    	System.out.println("Enter stock name");
@@ -39,21 +41,23 @@ public class BrokerUI {
 		    	int qunatity=  sc.nextInt();
 		    	System.out.println("Enter stock price");
 		    	double price = sc.nextDouble();
-		    
+		    	System.out.println("***********************************************************************************");
 		    br.addStock(name, qunatity, price);
 		    	
-		    	
+		    System.out.println("***********************************************************************************");
 		    	break;
 		    case 3: 
+		    	System.out.println("***********************************************************************************");
 		    	List<Stock> stock = br.getAllStocks();
 		    	for(Stock s : stock) {
 		    		System.out.println(s);
 		    	}
+		    	System.out.println("***********************************************************************************");
 		    	break;
 		    case 4: 
 		    	System.out.print("Enter Stock Name: ");
                 String st = sc.next();
-
+                System.out.println("***********************************************************************************");
                 Stock s = br.getStock(st);
                 if (s != null) {
                     System.out.println("Consolidated report for " + st);
@@ -61,19 +65,24 @@ public class BrokerUI {
                 } else {
                     System.out.println("No stock found with name " + st);
                 }
+                System.out.println("***********************************************************************************");
                 break;
 		    	
 		    case 5: 
 		    	System.out.print("Enter customer ID to delete: ");
 		          int customerId = sc.nextInt();
+		          System.out.println("***********************************************************************************");
 		          br.deleteCustomer(customerId);
+		          System.out.println("***********************************************************************************");
 		          break;
 		    	
 		    case 6: 
 		    	System.out.print("Enter stock name to delete: ");
 		          String stockNameToDelete = sc.next();
+		          System.out.println("***********************************************************************************");
 		          Stock stockToDelete = br.getStock(stockNameToDelete);
 		          br.deleteStock(stockToDelete);
+		          System.out.println("***********************************************************************************");
 		          break;
 		    	
 		    case 7: 
